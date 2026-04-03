@@ -128,7 +128,11 @@ const s3 = new S3Client({
     upload.on("httpUploadProgress", (progress) => {
       console.log("Upload progress:", progress.loaded, "/", progress.total);
     });
-
+ console.log("ENV CHECK:", {
+    bucket: import.meta.env.VITE_AWS_BUCKET_NAME,
+    region: import.meta.env.VITE_AWS_REGION,
+    key: import.meta.env.VITE_AWS_ACCESS_KEY,
+  });
     await upload.done();
 
     // ✅ Generate S3 URL
