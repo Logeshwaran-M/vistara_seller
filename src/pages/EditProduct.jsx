@@ -13,6 +13,8 @@ import {
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { Upload } from "@aws-sdk/lib-storage";
 
 export default function EditProduct() {
   const navigate = useNavigate();
@@ -59,6 +61,14 @@ export default function EditProduct() {
   });
 
   const [variants, setVariants] = useState([]);
+
+  const s3 = new S3Client({
+  region: "ap-south-1",
+  credentials: {
+    accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY,
+    secretAccessKey: import.meta.env.VITE_AWS_SECRET_KEY,
+  },
+});
 
   // ✅ AUTO SELLER ID & FETCH PRODUCT DATA
   useEffect(() => {
@@ -273,6 +283,40 @@ export default function EditProduct() {
   };
   const removeVariant = (i) => setVariants(variants.filter((_, index) => index !== i));
 
+  const uploadFileToS3 = async (file, userId) => {
+  const bucket = import.meta.env.VITE_AWS_BUCKET_NAME;
+  const region = import.meta.env.VITE_AWS_REGION;
+
+  const cleanFileName = file.name.replace(/[^a-zA-Z0-9.]/g, "_");
+  const fileName = `${Date.now()}_${cleanFileName}`;
+  const key = `seller-products/${userId}/${fileName}`;
+
+  try {
+    const upload = new Upload({
+      client: s3,
+      params: {
+        Bucket: bucket,
+        Key: key,
+        Body: file,
+        ContentType: file.type,
+      },
+    });
+
+    await upload.done();
+
+    return {
+      url: `https://${bucket}.s3.${region}.amazonaws.com/${key}`,
+      key,
+      name: fileName,
+      type: file.type,
+      size: file.size,
+    };
+
+  } catch (err) {
+    console.error("S3 Upload Error:", err);
+    throw new Error("Upload failed");
+  }
+};
   // 💾 UPDATE PRODUCT
   const handleUpdate = async () => {
     const user = auth.currentUser;
@@ -309,33 +353,23 @@ export default function EditProduct() {
 
     try {
       // 1. Upload new images
-      const uploadedImages = [];
-      if (newImages.length > 0) {
-        for (let [index, file] of newImages.entries()) {
-          try {
-            const timestamp = Date.now();
-            const cleanFileName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
-            const fileName = `${timestamp}_${cleanFileName}`;
-            const imageRef = ref(storage, `seller-products/${user.uid}/${fileName}`);
+    const uploadedImages = [];
 
-            await uploadBytes(imageRef, file);
-            const url = await getDownloadURL(imageRef);
+if (newImages.length > 0) {
+  for (let [index, file] of newImages.entries()) {
+    const uploaded = await uploadFileToS3(file, user.uid);
 
-            uploadedImages.push({
-              url: url,
-              name: fileName,
-              type: file.type,
-              size: file.size,
-              uploadedAt: Timestamp.now(),
-              isPrimary: (existingImages.length === 0 && index === 0) ? true : false
-            });
-
-          } catch (uploadError) {
-            console.error(`Error uploading image ${file.name}:`, uploadError);
-            throw new Error(`Failed to upload image: ${file.name}`);
-          }
-        }
-      }
+    uploadedImages.push({
+      url: uploaded.url,
+      key: uploaded.key, // ⭐ IMPORTANT
+      name: uploaded.name,
+      type: uploaded.type,
+      size: uploaded.size,
+      uploadedAt: Timestamp.now(),
+      isPrimary: (existingImages.length === 0 && index === 0)
+    });
+  }
+}
 
       // 2. Delete removed images from storage
       if (removedImages.length > 0) {

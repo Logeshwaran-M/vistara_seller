@@ -458,7 +458,7 @@ export default function Register() {
                   </>
                 ) : (
                   <>
-                    Submit Application <FiCheckCircle />
+                    Register <FiCheckCircle />
                   </>
                 )}
               </button>

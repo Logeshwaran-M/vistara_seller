@@ -31,6 +31,7 @@ export default function Profile() {
     city: "",
     state: "",
     pincode: "",
+    sellerId:""
 
   });
 
@@ -60,6 +61,7 @@ const s3 = new S3Client({
             lastName: data.lastName || "",
             email: data.email || "",
             phone: data.phone || "",
+              sellerId: data.sellerId || "",
             address: data.address || "",
             city: data.city || "",
             state: data.state || "",
@@ -384,6 +386,7 @@ const s3 = new S3Client({
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {[
+                         { label: "Seller Id", name: "sellerId", icon: <FiUser /> },
                         { label: "First Name", name: "firstName", icon: <FiUser /> },
                         { label: "Last Name", name: "lastName", icon: <FiUser /> },
                         { label: "Email", name: "email", icon: <FiMail />, type: "email", disabled: true },

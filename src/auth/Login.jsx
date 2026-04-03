@@ -198,11 +198,10 @@ if (sellerData.status === "approved") {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0f172a] relative overflow-hidden px-4">
+    <div className="min-h-screen flex items-center justify-center bg-white text-gray-900 relative overflow-hidden px-4">
 
       {/* Background Glow */}
-      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-600/20 rounded-full blur-[140px] animate-pulse"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full blur-[140px] animate-pulse delay-700"></div>
+     
 
       {/* Approval Popup */}
       <AnimatePresence>
@@ -281,15 +280,15 @@ if (sellerData.status === "approved") {
       >
 
         {/* LOGIN CARD */}
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-4 sm:p-5 rounded-2xl shadow-xl">
+        <div className="bg-white/5 backdrop-blur-xl border border-gray/10 p-4 sm:p-5 rounded-2xl shadow-xl">
 
           {/* LOGO + TITLE */}
           <div className="flex flex-col items-center text-center mb-4">
-            <div className="w-14 h-14 rounded-xl bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center shadow-lg mb-2">
+            <div className="w-16 h-14 rounded-xl  flex items-center justify-center shadow-lg mb-2">
               <img 
                 src={vistaraa} 
                 alt="Vistaraa Logo"
-                className="w-8 h-8 object-contain"
+                className="w-[120px] h-[120px] object-contain"
               />
             </div>
 
@@ -300,7 +299,7 @@ if (sellerData.status === "approved") {
             <h2 className="text-xs sm:text-sm font-semibold text-white mt-1">
               Seller Panel Login
             </h2>
-            <p className="text-[10px] text-gray-400 mt-1">
+            <p className="text-[15px] text-gray-900 mt-1">
               Access your seller dashboard
             </p>
           </div>
@@ -320,18 +319,18 @@ if (sellerData.status === "approved") {
           )}
 
           {/* FORM */}
-          <form onSubmit={handleLogin} className="space-y-3">
+          <form onSubmit={handleLogin} className="space-y-3 ">
 
             {/* Email */}
             <div>
-              <label className="text-xs text-gray-300 ml-1">Email *</label>
+              <label className="text-xs text-gray-900 ml-1">Email *</label>
               <div className="relative mt-1">
-                <FiMail className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-500 text-sm" />
+                <FiMail className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-900 text-sm" />
                 <input
                   required
                   type="email"
                   placeholder="seller@vistaraa.com"
-                  className="w-full bg-gray-800/50 border border-gray-700 text-white pl-8 pr-3 py-2.5 rounded-lg outline-none focus:ring-1 focus:ring-purple-500 text-xs"
+                  className="w-full bg-white-800/50 border border-gray-700 text-gray-900 pl-8 pr-3 py-2.5 rounded-lg outline-none focus:ring-1 focus:ring-purple-500 text-s"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={isLoading}
@@ -341,7 +340,7 @@ if (sellerData.status === "approved") {
 
             {/* Password */}
             <div>
-              <div className="flex justify-between text-xs text-gray-300 ml-1">
+              <div className="flex justify-between text-xs text-gray-900 ml-1">
                 <label>Password *</label>
                 <Link
   to="/forgot-password"
@@ -353,12 +352,12 @@ if (sellerData.status === "approved") {
               </div>
 
               <div className="relative mt-1">
-                <FiLock className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-500 text-sm" />
+                <FiLock className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-900 text-sm" />
                 <input
                   required
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
-                  className="w-full bg-gray-800/50 border border-gray-700 text-white pl-8 pr-8 py-2.5 rounded-lg outline-none focus:ring-1 focus:ring-purple-500 text-xs"
+                  className="w-full bg-white-800/50 border border-gray-700 text-gray-900 pl-8 pr-8 py-2.5 rounded-lg outline-none focus:ring-1 focus:ring-purple-500 text-s"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading}
@@ -376,10 +375,10 @@ if (sellerData.status === "approved") {
             </div>
 
             {/* Remember Me */}
-            <div className="flex items-center gap-1.5 text-[10px] text-gray-400">
+            <div className="flex items-center gap-1.5 text-[10px] text-gray-900">
               <input 
                 type="checkbox" 
-                className="rounded border-gray-700 bg-gray-800 text-purple-600 focus:ring-purple-500" 
+                className="rounded border-gray-900 bg-gray-800 text-purple-600 focus:ring-purple-500" 
                 disabled={isLoading}
               />
               Keep me logged in
@@ -418,7 +417,7 @@ if (sellerData.status === "approved") {
                 whileTap={{ scale: 0.98 }}
                 type="button"
                 disabled={isLoading}
-                className="w-full py-2.5 rounded-lg font-bold text-white border border-purple-500/50 hover:bg-purple-600/10 transition-all flex items-center justify-center gap-1.5 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-2.5 rounded-lg font-bold text-gray-900 border border-purple-500/50 hover:bg-purple-600/10 transition-all flex items-center justify-center gap-1.5 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <FiUserPlus />
                 Create Seller Account
