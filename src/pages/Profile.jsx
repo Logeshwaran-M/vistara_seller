@@ -112,7 +112,7 @@ const s3 = new S3Client({
     const fileName = `profile_${user.uid}_${Date.now()}.${file.name.split('.').pop()}`;
     const key = `profile-images/${user.uid}/${fileName}`;
 
-    const bucket = vistaraweb-india;
+    const bucket = "vistaraweb-india";
     const region = import.meta.env.VITE_AWS_REGION;
 
     const upload = new Upload({
