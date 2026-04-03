@@ -41,7 +41,7 @@ const s3 = new S3Client({
     secretAccessKey: import.meta.env.VITE_AWS_SECRET_KEY,
   },
 });
-
+ console.log("ENV:", import.meta.env);
   // 🔥 Fetch Seller Profile
   useEffect(() => {
     const fetchProfile = async () => {
