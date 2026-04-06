@@ -14,9 +14,7 @@ export default function SellerPendingApproval() {
     if (!user) return navigate("/login");
 
     const sellerRef = doc(db, "sellers", user.uid);
-  if (currentStatus === "approved") {
-        navigate("/", { replace: true });
-      }
+
     const unsub = onSnapshot(sellerRef, (snap) => {
       if (snap.exists()) {
         const data = snap.data();

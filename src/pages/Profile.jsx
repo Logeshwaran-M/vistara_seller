@@ -372,21 +372,24 @@ const s3 = new S3Client({
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setEditMode(!editMode)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium ${editMode
-                          ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white'
-                          : darkMode
-                            ? 'bg-gray-700 hover:bg-gray-600 text-gray-300'
-                            : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                          }`}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium
+  ${
+    editMode
+      ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white'
+      : darkMode
+        ? 'bg-blue-500 hover:bg-blue-600 text-white'
+        : 'bg-blue-600 hover:bg-blue-700 text-white'
+  }
+`}
                       >
-
+            Edit Profile
 
                       </motion.button>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {[
-                         { label: "Seller Id", name: "sellerId", icon: <FiUser /> },
+                         { label: "Seller Id", name: "sellerId", icon: <FiUser />,disabled: true },
                         { label: "First Name", name: "firstName", icon: <FiUser /> },
                         { label: "Last Name", name: "lastName", icon: <FiUser /> },
                         { label: "Email", name: "email", icon: <FiMail />, type: "email", disabled: true },
@@ -412,8 +415,8 @@ const s3 = new S3Client({
                             className={`w-full px-4 py-3 rounded-xl border transition-all ${editMode && !field.disabled
                               ? 'border-purple-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200'
                               : darkMode
-                                ? 'bg-gray-900 border-gray-700 text-gray-400'
-                                : 'bg-gray-50 border-gray-200 text-gray-500'
+                                ? 'bg-gray-900 border-gray-700 text-gray-900'
+                                : 'bg-gray-50 border-gray-200 text-gray-900'
                               } ${darkMode ? 'bg-gray-900 text-white' : ''}`}
                           />
                         </motion.div>

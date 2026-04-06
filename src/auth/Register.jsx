@@ -200,7 +200,7 @@ export default function Register() {
                     value={form.firstName}
                     onChange={handleChange} 
                     placeholder="First Name *" 
-                    className="vist-input" 
+                    className="vist-input placeholder-white/70" 
                     required
                   />
                   <input 
@@ -354,7 +354,7 @@ export default function Register() {
                     <div className="relative">
                       <input 
                         type={showPass ? "text" : "password"} 
-                        name="password" 
+                        name="password"
                         value={form.password}
                         onChange={handleChange} 
                         placeholder="Enter password (min 8 characters)" 
@@ -497,7 +497,7 @@ export default function Register() {
           background: rgba(30,41,59,0.8);
         }
         .vist-input::placeholder {
-          color: #64748b;
+          color: #f7f8fa;
         }
         select.vist-input {
           appearance: none;
