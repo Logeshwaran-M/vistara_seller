@@ -20,6 +20,7 @@ import {
   where,
   orderBy,
   limit,
+  collectionGroup
 } from "firebase/firestore";
 import { auth, db } from "../config/firebase";
 import { motion } from "framer-motion";
@@ -47,18 +48,43 @@ export default function Dashboard() {
         if (!user) return;
 
         /* ================= ORDERS ================= */
-        const ordersQuery = query(
-          collection(db, "orders"),
-          where("sellerId", "==", user.uid),
-          orderBy("createdAt", "desc"),
-          limit(5)
-        );
+        // Use SAFE FETCH with deep scanning (No index required)
+        const allOrdersSnap = await getDocs(query(collectionGroup(db, "orders"), limit(200)));
+        const effectiveSellerId = user.uid;
+        const candidateFields = ['sellerId', 'sellerid', 'sellerID', 'seller', 'owner', 'userId', 'uid'];
 
-        const ordersSnap = await getDocs(ordersQuery);
-        const orders = ordersSnap.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+        const filteredOrders = allOrdersSnap.docs.filter(d => {
+          const data = d.data();
+          const hasRootMatch = candidateFields.some(field => data[field] && String(data[field]) === String(effectiveSellerId));
+          if (hasRootMatch) return true;
+          const items = data.products || data.items || [];
+          if (Array.isArray(items)) {
+            return items.some(p => candidateFields.some(field => p[field] && String(p[field]) === String(effectiveSellerId)));
+          }
+          return false;
+        }).map(doc => {
+          const rawData = doc.data();
+          const customer = rawData.shippingAddress?.fullName || rawData.customer || "Customer";
+          const amount = rawData.totalAmount || rawData.amount || 
+                         parseFloat(rawData.shippingAddress?.totalAmount || 0) || 0;
+          let status = rawData.orderStatus || rawData.status || "Pending";
+          status = status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+
+          return {
+            id: doc.id,
+            ...rawData,
+            customer,
+            amount,
+            status,
+            createdAt: rawData.createdAt?.toDate ? rawData.createdAt.toDate() : 
+                       rawData.timestamp?.toDate ? rawData.timestamp.toDate() :
+                       new Date(rawData.createdAt || rawData.timestamp || Date.now())
+          };
+        });
+
+        const orders = filteredOrders.sort((a,b) => b.createdAt - a.createdAt);
+        const recentOrders = orders.slice(0, 5);
+        setRecentOrders(recentOrders);
 
         /* ================= PRODUCTS ================= */
         const productsQuery = query(
